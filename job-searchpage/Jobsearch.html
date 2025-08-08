@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search - CoderBot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img class="logo dark img-fluid" src="../assets/images/logo-dark.png" alt="coderbot" style="width: 100%; height: 40px;">
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/jobs">Active Hiring</a></li>
+                    <li><a href="/remote">Remote Jobs</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-outline">Login</a>
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Job Search</h1>
+            <p>Search for your desired job matching your skills</p>
+        </div>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <form class="search-form" id="searchForm">
+                <div class="form-group">
+                    <label for="jobTitle">Enter Job title</label>
+                    <input type="text" id="jobTitle" class="form-control" placeholder="e.g. Software Engineer">
+                </div>
+                <div class="form-group">
+                    <label for="location">Enter location</label>
+                    <input type="text" id="location" class="form-control" placeholder="e.g. New York, Remote">
+                </div>
+                <div class="form-group">
+                    <label for="experience">Years of experience</label>
+                    <select id="experience" class="form-control">
+                        <option value="">Any Experience</option>
+                        <option value="0-1">0-1 years</option>
+                        <option value="1-3">1-3 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="5-10">5-10 years</option>
+                        <option value="10+">10+ years</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </form>
+        </section>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Filter Sidebar -->
+            <aside class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Filter</h3>
+                
+                <div class="filter-group">
+                    <h4>Salary Range</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" name="salary" value="0-3k">
+                            <span>0 - 3k</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="salary" value="3k-6k">
+                            <span>3k - 6k</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="salary" value="6k-10k">
+                            <span>6k - 10k</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="salary" value="10k+">
+                            <span>10k+</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Job Type</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" name="jobType" value="full-time">
+                            <span>Full Time (25k)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="jobType" value="part-time">
+                            <span>Part Time (5k)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="jobType" value="contract">
+                            <span>Contract (8k)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="jobType" value="internship">
+                            <span>Internship (2k)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Work Mode</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" name="workMode" value="on-site">
+                            <span>On-Site</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="workMode" value="remote">
+                            <span>Remote (100%)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="workMode" value="hybrid">
+                            <span>Hybrid</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Job Functions</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" name="function" value="marketing">
+                            <span>Marketing (25)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="function" value="engineering">
+                            <span>Engineering (45)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="function" value="design">
+                            <span>Design (15)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="function" value="sales">
+                            <span>Sales (30)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Experience Level</h4>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" name="level" value="entry">
+                            <span>Entry-level (200)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="level" value="junior">
+                            <span>Junior (80)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="level" value="senior">
+                            <span>Senior (3)</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="level" value="lead">
+                            <span>Lead/Managerial (20)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="clear-filters" onclick="clearFilters()">Clear all</button>
+            </aside>
+
+            <!-- Results Area -->
+            <section class="results-area">
+                <div class="results-header">
+                    <div class="results-count">
+                        Loading jobs with filters: <span id="jobCount">0</span>
+                    </div>
+                    <div class="sort-options">
+                        <select id="sortBy">
+                            <option value="relevant">Popular</option>
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="salary-high">Salary: High to Low</option>
+                            <option value="salary-low">Salary: Low to High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Job Results Grid -->
+                <div class="job-grid" id="jobGrid">
+                    <!-- Loading State -->
+                    <div class="loading" id="loadingState">
+                        <div class="spinner"></div>
+                        <p>Loading jobs...</p>
+                    </div>
+                    
+                    <!-- Error State -->
+                    <div class="error-message" id="errorState" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error</h3>
+                        <p>Failed to load jobs. Failed to fetch. Check console for details.</p>
+                        <button class="btn-apply" onclick="loadJobs()">Try Again</button>
+                        <button class="btn-secondary" onclick="testAPI()">Test API</button>
+                    </div>
+
+                    <!-- No Results State -->
+                    <div class="no-results" id="noResultsState" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <h3>No jobs found</h3>
+                        <p>Try adjusting your search criteria or filters.</p>
+                        <button class="btn-apply" onclick="clearFiltersAndReload()">Clear Filters</button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination" style="display: none;">
+                    <button class="active" onclick="changePage(1)">1</button>
+                    <button onclick="changePage(2)">2</button>
+                    <button onclick="changePage(3)">3</button>
+                    <button disabled>...</button>
+                    <button onclick="changePage(10)">10</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Job Detail Modal -->
+    <div class="job-modal-overlay" id="jobModal" style="display: none;">
+        <div class="job-modal">
+            <div class="modal-header">
+                <h2 id="modalJobTitle">Job Title</h2>
+                <button class="close-btn" onclick="closeJobModal()">&times;</button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading job details...</p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeJobModal()">Close</button>
+                <button class="btn-apply" id="modalApplyBtn">Apply Now</button>
+            </div>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
