@@ -37,7 +37,7 @@ NODE_ENV=development
 PORT=5000
 
 # Database
-MONGODB_URI=mongodb+srv://manankhandelwal2020:nvdwKzOSWYJJhY3e@cluster1.mbd3gqb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1
+MONGODB_URI=mongodb+srv://manankhandelwal2020:gW72mZR8Pgy0yCEp@cluster1.mbd3gqb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1
 
 # JWT Secret (change this in production)
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production

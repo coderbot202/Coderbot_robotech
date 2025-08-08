@@ -5,7 +5,7 @@ const connectDB = async () => {
     try {
         console.log('Attempting MongoDB connection...');
         
-        const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://manankhandelwal2020:ZnIEPKoRE3X034Z0@cluster1.mbd3gqb.mongodb.net/jobportal?retryWrites=true&w=majority&appName=Cluster1';
+        const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://manankhandelwal2020:gW72mZR8Pgy0yCEp@cluster1.mbd3gqb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1';
         
         const options = {
             // Connection timeout settings
