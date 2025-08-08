@@ -219,7 +219,7 @@ async function populateDatabase() {
     // Connect to MongoDB
     console.log('Connecting to MongoDB...');
     await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb+srv://manankhandelwal2020:ZnIEPKoRE3X034Z0@cluster1.mbd3gqb.mongodb.net/jobportal?retryWrites=true&w=majority&appName=Cluster1',
+      process.env.MONGODB_URI || 'mongodb+srv://manankhandelwal2020:nvdwKzOSWYJJhY3e@cluster1.mbd3gqb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1',
       {
         serverSelectionTimeoutMS: 10000,
         socketTimeoutMS: 45000,
@@ -283,4 +283,4 @@ module.exports = { populateDatabase, sampleJobs };
 
 
 
-//cd D:\Coderbot_robotech-main\Coderbot_robotech-main\job-searchpage
+//cd D:\Coderbot_robotech-main\job-searchpage

@@ -1,6 +1,6 @@
 // job-searchpage/controllers/jobController.js
-const Job = require('d:/Coderbot_robotech-main/Coderbot_robotech-main/job-searchpage/models/job.js');
-const Application = require('d:/Coderbot_robotech-main/Coderbot_robotech-main/job-searchpage/models/Application.js');
+const Job = require('../models/Job.js');
+const Application = require('../models/Application.js');
 
 const jobController = {
     // Get all jobs with search and filters

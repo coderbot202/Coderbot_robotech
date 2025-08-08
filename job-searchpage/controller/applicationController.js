@@ -1,7 +1,7 @@
 // job-searchpage/controllers/applicationController.js
 const Application = require('../models/Application');
-const Job = require('d:/Coderbot_robotech-main/Coderbot_robotech-main/job-searchpage/models/job.js');
-const User = require('d:/Coderbot_robotech-main/Coderbot_robotech-main/job-searchpage/models/User.js');
+const Job = require('../models/Job.js');
+const User = require('../models/User.js');
 
 const applicationController = {
     // Create new application
