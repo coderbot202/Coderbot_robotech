@@ -7,15 +7,24 @@ let currentPage = 1;
 const jobsPerPage = 10;
 let authToken = null;
 
-// Initialize the page
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Job Portal Loading...');
     loadJobs();
     
-    // Add event listeners
-    const searchForm = document.getElementById('searchForm');
+    
+    const searchForm = document.querySelector('.search-form');
+    const searchButton = document.getElementById('searchButton');
+    
+    if (searchButton) {
+        searchButton.addEventListener('click', handleSearchSubmit);
+    }
+    
     if (searchForm) {
-        searchForm.addEventListener('submit', handleSearch);
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleSearchSubmit();
+        });
     }
     
     const sortBy = document.getElementById('sortBy');
@@ -23,43 +32,76 @@ document.addEventListener('DOMContentLoaded', function() {
         sortBy.addEventListener('change', handleSort);
     }
     
-    setupFilterListeners();
+    setTimeout(() => {
+        setupFilterListeners();
+        console.log('Real-time filter system ready');
+    }, 100);
+    
     console.log('Event listeners attached');
 });
 
-// Setup filter event listeners
+function handleSearchSubmit(e) {
+    if (e) e.preventDefault();
+    
+    console.log('Search form submitted');
+    showLoading();
+    
+    // Small delay for better UX
+    setTimeout(() => {
+        applySearchAndFilters();
+    }, 300);
+}
+
+// Setup filter event listeners for real-time filtering 
 function setupFilterListeners() {
+    console.log('Setting up filter listeners...');
+    
     // Salary range filters
     const salaryFilters = document.querySelectorAll('input[name="salary"]');
     salaryFilters.forEach(input => {
-        input.addEventListener('change', applyFilters);
+        input.addEventListener('change', function() {
+            console.log('Salary filter changed:', this.value, this.checked);
+            applySearchAndFilters();
+        });
     });
 
     // Job type filters
     const jobTypeFilters = document.querySelectorAll('input[name="jobType"]');
     jobTypeFilters.forEach(input => {
-        input.addEventListener('change', applyFilters);
+        input.addEventListener('change', function() {
+            console.log('Job type filter changed:', this.value, this.checked);
+            applySearchAndFilters();
+        });
     });
 
     // Work mode filters
     const workModeFilters = document.querySelectorAll('input[name="workMode"]');
     workModeFilters.forEach(input => {
-        input.addEventListener('change', applyFilters);
+        input.addEventListener('change', function() {
+            console.log('Work mode filter changed:', this.value, this.checked);
+            applySearchAndFilters();
+        });
     });
 
     // Function filters
     const functionFilters = document.querySelectorAll('input[name="function"]');
     functionFilters.forEach(input => {
-        input.addEventListener('change', applyFilters);
+        input.addEventListener('change', function() {
+            console.log('Function filter changed:', this.value, this.checked);
+            applySearchAndFilters();
+        });
     });
 
     // Experience level filters
     const levelFilters = document.querySelectorAll('input[name="level"]');
     levelFilters.forEach(input => {
-        input.addEventListener('change', applyFilters);
+        input.addEventListener('change', function() {
+            console.log('Level filter changed:', this.value, this.checked);
+            applySearchAndFilters();
+        });
     });
 
-    console.log('Filter listeners setup complete');
+    console.log('Real-time filter listeners setup complete');
 }
 
 // Load jobs from API
@@ -68,7 +110,7 @@ async function loadJobs(searchFilters = {}) {
         showLoading();
         
         const queryParams = new URLSearchParams({
-            limit: 100, // Load more jobs for better filtering
+            limit: 100,
             ...searchFilters
         });
         
@@ -106,10 +148,10 @@ async function loadJobs(searchFilters = {}) {
         console.log(`Loaded ${allJobs.length} jobs from API`);
         
         // Apply any active filters
-        applyCurrentFilters();
+        applySearchAndFilters();
         
         // Update filter counts based on all available jobs
-        updateFilterCounts();
+        updateAllFilterCounts();
         
     } catch (error) {
         console.error('Error loading jobs:', error);
@@ -119,39 +161,151 @@ async function loadJobs(searchFilters = {}) {
     }
 }
 
-// Get currently active filters
+// Apply search and all filters with improved real-time response
+function applySearchAndFilters() {
+    console.log('Applying filters in real-time...');
+    
+    const searchFilters = getSearchFilters();
+    const checkboxFilters = getActiveFilters();
+    
+    console.log('Current filters:', { searchFilters, checkboxFilters });
+    
+    // Start with all jobs
+    let filteredJobs = [...allJobs];
+    
+    // Apply search filters first
+    if (searchFilters.search && searchFilters.search.trim()) {
+        const searchTerm = searchFilters.search.trim().toLowerCase();
+        filteredJobs = filteredJobs.filter(job => {
+            // Enhanced partial matching for job titles
+            const title = (job.title || '').toLowerCase();
+            const company = (job.company || '').toLowerCase();
+            const description = (job.description || '').toLowerCase();
+            const skills = (job.skills || job.tags || []).join(' ').toLowerCase();
+            
+            // Check if search term is contained in any of these fields
+            return title.includes(searchTerm) ||
+                   company.includes(searchTerm) ||
+                   description.includes(searchTerm) ||
+                   skills.includes(searchTerm);
+        });
+    }
+    
+    if (searchFilters.location && searchFilters.location.trim()) {
+        const locationTerm = searchFilters.location.trim().toLowerCase();
+        filteredJobs = filteredJobs.filter(job => 
+            job.location && job.location.toLowerCase().includes(locationTerm)
+        );
+    }
+    
+    // Enhanced experience filtering with range support
+    if (searchFilters.experience && searchFilters.experience.trim()) {
+        const expValue = searchFilters.experience.trim();
+        filteredJobs = filteredJobs.filter(job => {
+            return matchesExperienceRange(job, expValue);
+        });
+    }
+    
+    // Apply checkbox filters with real-time updates
+    if (Object.keys(checkboxFilters).length > 0) {
+        filteredJobs = filteredJobs.filter(job => {
+            return passesAllFilters(job, checkboxFilters);
+        });
+    }
+    
+    currentJobs = filteredJobs;
+    console.log(`Real-time filtered to ${currentJobs.length} jobs from ${allJobs.length} total`);
+    
+    // Update UI immediately for better UX
+    updateJobDisplayImmediate();
+    
+    // Update filter counts in real-time
+    updateAllFilterCounts();
+}
+
+// Enhanced experience matching function
+function matchesExperienceRange(job, selectedExpRange) {
+    const jobExpText = (job.experience || job.experienceLevel || '').toLowerCase();
+    const jobTitle = (job.title || '').toLowerCase();
+    
+    // Extract numeric experience from job
+    const jobExpRange = extractExperienceRange(jobExpText, jobTitle);
+    
+    // Define experience ranges based on dropdown selection
+    let searchRange;
+    
+    switch (selectedExpRange) {
+        case '0-1':
+            searchRange = { min: 0, max: 1 };
+            break;
+        case '1-3':
+            searchRange = { min: 1, max: 3 };
+            break;
+        case '3-5':
+            searchRange = { min: 3, max: 5 };
+            break;
+        case '5-10':
+            searchRange = { min: 5, max: 10 };
+            break;
+        case '10+':
+            searchRange = { min: 10, max: 50 };
+            break;
+        default:
+            return true; // If no specific range, show all
+    }
+    
+    // Check if job experience overlaps with search range
+    return checkExperienceOverlap(searchRange, jobExpRange);
+}
+
+// Check if two experience ranges overlap
+function checkExperienceOverlap(searchRange, jobRange) {
+    // If job has no experience specified, include it for entry level positions
+    if (jobRange.min === 0 && jobRange.max === 0) {
+        return searchRange.min === 0; // Only show for 0-1 range
+    }
+    
+    // Check for overlap: ranges overlap if max of first >= min of second AND min of first <= max of second
+    return searchRange.max >= jobRange.min && searchRange.min <= jobRange.max;
+}
+
+// Get search input values
+function getSearchFilters() {
+    return {
+        search: document.getElementById('jobTitle')?.value || '',
+        location: document.getElementById('location')?.value || '',
+        experience: document.getElementById('experience')?.value || ''
+    };
+}
+
+// Get currently active checkbox filters
 function getActiveFilters() {
     const filters = {};
     
-    // Salary filter
     const salaryChecked = Array.from(document.querySelectorAll('input[name="salary"]:checked'))
         .map(input => input.value);
     if (salaryChecked.length > 0) {
         filters.salary = salaryChecked;
     }
 
-    // Job type filter
     const jobTypeChecked = Array.from(document.querySelectorAll('input[name="jobType"]:checked'))
         .map(input => input.value);
     if (jobTypeChecked.length > 0) {
         filters.jobType = jobTypeChecked;
     }
 
-    // Work mode filter
     const workModeChecked = Array.from(document.querySelectorAll('input[name="workMode"]:checked'))
         .map(input => input.value);
     if (workModeChecked.length > 0) {
         filters.workMode = workModeChecked;
     }
 
-    // Function filter
     const functionChecked = Array.from(document.querySelectorAll('input[name="function"]:checked'))
         .map(input => input.value);
     if (functionChecked.length > 0) {
         filters.function = functionChecked;
     }
 
-    // Experience level filter
     const levelChecked = Array.from(document.querySelectorAll('input[name="level"]:checked'))
         .map(input => input.value);
     if (levelChecked.length > 0) {
@@ -159,29 +313,6 @@ function getActiveFilters() {
     }
 
     return filters;
-}
-
-// Apply current active filters
-function applyCurrentFilters() {
-    const filters = getActiveFilters();
-    console.log('Applying filters:', filters);
-    
-    if (Object.keys(filters).length === 0) {
-        currentJobs = [...allJobs];
-    } else {
-        currentJobs = allJobs.filter(job => {
-            return passesAllFilters(job, filters);
-        });
-    }
-    
-    console.log(`Filtered to ${currentJobs.length} jobs from ${allJobs.length} total`);
-    
-    if (currentJobs.length === 0) {
-        showNoResults();
-    } else {
-        displayJobs(currentJobs);
-        updateJobCount(currentJobs.length);
-    }
 }
 
 // Check if a job passes all active filters
@@ -198,7 +329,7 @@ function passesAllFilters(job, filters) {
         if (!salaryMatch) return false;
     }
 
-    // Experience filter
+    // Experience filter (for checkbox filters)
     if (filters.level && filters.level.length > 0) {
         const jobExpRange = extractExperienceRange(
             job.experience || job.experienceLevel || '', 
@@ -207,7 +338,7 @@ function passesAllFilters(job, filters) {
         
         let levelMatch = false;
         for (const level of filters.level) {
-            if (checkExperienceOverlap(level, jobExpRange)) {
+            if (checkExperienceLevelOverlap(level, jobExpRange)) {
                 levelMatch = true;
                 break;
             }
@@ -278,16 +409,49 @@ function passesAllFilters(job, filters) {
     return true;
 }
 
-// Update filter counts based on ALL jobs (not filtered jobs)
-function updateFilterCounts() {
-    console.log('Updating filter counts based on all jobs...');
+// Enhanced experience overlap checking for filter levels
+function checkExperienceLevelOverlap(filterLevel, jobExpRange) {
+    let filterRange;
     
-    // Update all filter categories
+    switch (filterLevel.toLowerCase()) {
+        case 'entry':
+            filterRange = { min: 0, max: 2 };
+            break;
+        case 'junior':
+            filterRange = { min: 1, max: 4 };
+            break;
+        case 'senior':
+            filterRange = { min: 4, max: 15 };
+            break;
+        case 'lead':
+            filterRange = { min: 7, max: 25 };
+            break;
+        default:
+            return true;
+    }
+    
+    return checkExperienceOverlap(filterRange, jobExpRange);
+}
+
+// Update all filter counts based on currently filtered jobs
+function updateAllFilterCounts() {
+    console.log('Updating all filter counts...');
+    
     updateSalaryCounts();
     updateJobTypeCounts();
     updateWorkModeCounts();
     updateFunctionCounts();
     updateExperienceCounts();
+    
+    // Ensure event listeners are still attached after DOM updates
+    setTimeout(() => {
+        // Check if event listeners are still working, if not reattach them
+        const testCheckbox = document.querySelector('input[name="salary"]');
+        if (testCheckbox && !testCheckbox.onchange) {
+            console.log('Event listeners lost, reattaching...');
+            setupFilterListeners();
+        }
+    }, 100);
 }
 
 function updateSalaryCounts() {
@@ -351,7 +515,7 @@ function updateWorkModeCounts() {
 }
 
 function updateFunctionCounts() {
-    const functions = ['marketing', 'engineering', 'design', 'product'];
+    const functions = ['marketing', 'engineering', 'design', 'sales'];
     
     functions.forEach(func => {
         const checkbox = document.querySelector(`input[name="function"][value="${func}"]`);
@@ -375,9 +539,9 @@ function updateFunctionCounts() {
                     return jobTitle.includes('marketing') || jobDepartment.includes('marketing') ||
                            jobTitle.includes('brand') || jobTitle.includes('campaign');
                 }
-                if (func === 'product') {
-                    return jobTitle.includes('product') || jobDepartment.includes('product') ||
-                           jobTitle.includes('pm ') || jobTitle.includes('product manager');
+                if (func === 'sales') {
+                    return jobTitle.includes('sales') || jobDepartment.includes('sales') ||
+                           jobTitle.includes('account') || jobTitle.includes('business development');
                 }
                 
                 return jobTitle.includes(func) || jobDescription.includes(func) || 
@@ -390,12 +554,10 @@ function updateFunctionCounts() {
 
 function updateExperienceCounts() {
     const levels = [
-        { value: 'fresher', range: { min: 0, max: 1 } },
-        { value: '1-3', range: { min: 1, max: 3 } },
-        { value: '3-5', range: { min: 3, max: 5 } },
-        { value: '5-7', range: { min: 5, max: 7 } },
-        { value: '7-10', range: { min: 7, max: 10 } },
-        { value: '10+', range: { min: 10, max: 25 } }
+        { value: 'entry', label: 'Entry-level' },
+        { value: 'junior', label: 'Junior' },
+        { value: 'senior', label: 'Senior' },
+        { value: 'lead', label: 'Lead/Managerial' }
     ];
     
     levels.forEach(level => {
@@ -406,182 +568,100 @@ function updateExperienceCounts() {
                     job.experience || job.experienceLevel || '', 
                     job.title || ''
                 );
-                return checkExperienceOverlap(level.value, jobExpRange);
+                return checkExperienceLevelOverlap(level.value, jobExpRange);
             }).length;
-            updateFilterLabel(checkbox, count);
+            updateFilterLabel(checkbox, count, level.label);
         }
     });
 }
 
-// Helper function to update filter labels with counts
-function updateFilterLabel(checkbox, count) {
+// Fixed helper function to update filter labels with live counts WITHOUT breaking event listeners
+function updateFilterLabel(checkbox, count, customLabel = null) {
     if (!checkbox) return;
     
     const label = checkbox.closest('label') || checkbox.parentElement;
     if (!label) return;
     
-    // Get the original label text (before any count)
-    let labelText = label.textContent || '';
+    // Get the original label text
+    let labelText = customLabel || checkbox.value;
     
-    // Remove existing count if present
-    labelText = labelText.replace(/\s*\(\d+[kK]?\)$/, '');
+    // Format the label based on the filter type
+    if (checkbox.name === 'salary') {
+        labelText = checkbox.value.replace('k', 'K');
+    } else if (checkbox.name === 'jobType') {
+        const typeLabels = {
+            'full-time': 'Full Time',
+            'part-time': 'Part Time',
+            'contract': 'Contract',
+            'internship': 'Internship'
+        };
+        labelText = typeLabels[checkbox.value] || checkbox.value;
+    } else if (checkbox.name === 'workMode') {
+        const modeLabels = {
+            'on-site': 'On-Site',
+            'remote': 'Remote',
+            'hybrid': 'Hybrid'
+        };
+        labelText = modeLabels[checkbox.value] || checkbox.value;
+    } else if (checkbox.name === 'function') {
+        labelText = checkbox.value.charAt(0).toUpperCase() + checkbox.value.slice(1);
+    }
     
-    // Add new count
+    // Format count
     const countSuffix = count >= 1000 ? `${Math.floor(count/1000)}k` : count.toString();
-    label.innerHTML = `${checkbox.outerHTML} ${labelText} (${countSuffix})`;
+    
+    // COMPLETELY FIXED: Clear all content except checkbox and rebuild
+    const checkboxElement = checkbox.cloneNode(true);
+    
+    // Clear the label completely and add back only checkbox + text
+    label.innerHTML = '';
+    label.appendChild(checkboxElement);
+    
+    // Add the formatted text
+    const textSpan = document.createElement('span');
+    textSpan.className = 'filter-label-text';
+    textSpan.textContent = ` ${labelText} (${countSuffix})`;
+    label.appendChild(textSpan);
+    
+    // Re-attach the event listener to the new checkbox
+    checkboxElement.addEventListener('change', function() {
+        console.log(`${this.name} filter changed:`, this.value, this.checked);
+        applySearchAndFilters();
+    });
 }
 
-// Extract salary range (both min and max) from salary string
-function extractSalaryRange(salaryString) {
-    if (!salaryString) return { min: 0, max: 0 };
+// Immediate job display update for real-time filtering
+function updateJobDisplayImmediate() {
+    const jobGrid = document.getElementById('jobGrid');
     
-    const cleanString = salaryString.replace(/[₹$,\s]/g, '').toLowerCase();
-    
-    // Match ranges like "8k-14k", "10k-16k"
-    const rangeMatch = cleanString.match(/(\d+)k?[-–](\d+)k?/);
-    if (rangeMatch) {
-        const min = parseInt(rangeMatch[1]);
-        const max = parseInt(rangeMatch[2]);
-        return { min, max };
+    if (currentJobs.length === 0) {
+        showNoResults();
+    } else {
+        // Immediate update without fade effect for better real-time feel
+        displayJobs(currentJobs);
+        updateJobCount(currentJobs.length);
     }
+}
+
+// New function for smooth job display updates
+function updateJobDisplay() {
+    const jobGrid = document.getElementById('jobGrid');
     
-    // Match single values with K like "15K"
-    const kMatch = cleanString.match(/(\d+)[k]/);
-    if (kMatch) {
-        const salary = parseInt(kMatch[1]);
-        return { min: salary, max: salary };
-    }
-    
-    // Match plain numbers
-    const plainMatch = cleanString.match(/(\d+)/);
-    if (plainMatch) {
-        let salary = parseInt(plainMatch[1]);
-        if (salary >= 1000) {
-            salary = Math.floor(salary / 1000);
+    if (currentJobs.length === 0) {
+        showNoResults();
+    } else {
+        // Add fade effect
+        if (jobGrid) {
+            jobGrid.style.opacity = '0.7';
+            setTimeout(() => {
+                displayJobs(currentJobs);
+                jobGrid.style.opacity = '1';
+            }, 100);
+        } else {
+            displayJobs(currentJobs);
         }
-        return { min: salary, max: salary };
+        updateJobCount(currentJobs.length);
     }
-    
-    return { min: 0, max: 0 };
-}
-
-// Check if salary range overlaps with filter range
-function checkSalaryRange(salaryString, filterRange) {
-    const salaryRange = extractSalaryRange(salaryString);
-    
-    let filterMin, filterMax;
-    
-    switch (filterRange) {
-        case '0-3k':
-            filterMin = 0;
-            filterMax = 3;
-            break;
-        case '3k-6k':
-            filterMin = 3;
-            filterMax = 6;
-            break;
-        case '6k-10k':
-            filterMin = 6;
-            filterMax = 10;
-            break;
-        case '10k+':
-            filterMin = 10;
-            filterMax = 1000;
-            break;
-        default:
-            return true;
-    }
-    
-    return (salaryRange.max >= filterMin && filterMax >= salaryRange.min);
-}
-
-// Enhanced experience range extraction
-function extractExperienceRange(experienceText, jobTitle = '') {
-    const text = `${experienceText} ${jobTitle}`.toLowerCase();
-    
-    // Handle fresher/entry level
-    if (text.includes('fresher') || text.includes('0 year') || text.includes('entry') || 
-        text.includes('junior') || text.includes('intern')) {
-        return { min: 0, max: 1 };
-    }
-    
-    // Handle senior level (without specific numbers)
-    if (text.includes('senior') && !text.match(/\d+/)) {
-        return { min: 5, max: 15 };
-    }
-    
-    // Extract number patterns
-    const patterns = [
-        /(\d+)\s*[-–to]+\s*(\d+)\s*years?/i,
-        /(\d+)\s*[-–]\s*(\d+)/i,
-        /(\d+)\+\s*years?/i,
-        /(\d+)\s*years?/i
-    ];
-    
-    for (const pattern of patterns) {
-        const match = text.match(pattern);
-        if (match) {
-            if (match[2]) {
-                return { 
-                    min: parseInt(match[1]), 
-                    max: parseInt(match[2]) 
-                };
-            } else if (text.includes('+')) {
-                const minExp = parseInt(match[1]);
-                return { 
-                    min: minExp, 
-                    max: minExp + 10 
-                };
-            } else {
-                const exp = parseInt(match[1]);
-                return { 
-                    min: Math.max(0, exp - 1), 
-                    max: exp + 1 
-                };
-            }
-        }
-    }
-    
-    return { min: 0, max: 15 };
-}
-
-// Enhanced experience overlap checking
-function checkExperienceOverlap(filterLevel, jobExpRange) {
-    let filterRange;
-    
-    switch (filterLevel.toLowerCase()) {
-        case 'fresher':
-        case '0-1':
-            filterRange = { min: 0, max: 1 };
-            break;
-        case '1-3':
-            filterRange = { min: 1, max: 3 };
-            break;
-        case '3-5':
-            filterRange = { min: 3, max: 5 };
-            break;
-        case '5-7':
-            filterRange = { min: 5, max: 7 };
-            break;
-        case '7-10':
-            filterRange = { min: 7, max: 10 };
-            break;
-        case '10+':
-            filterRange = { min: 10, max: 25 };
-            break;
-        default:
-            const rangeMatch = filterLevel.match(/(\d+)-(\d+)/);
-            if (rangeMatch) {
-                filterRange = { 
-                    min: parseInt(rangeMatch[1]), 
-                    max: parseInt(rangeMatch[2]) 
-                };
-            } else {
-                return true;
-            }
-    }
-    
-    return (filterRange.max >= jobExpRange.min && jobExpRange.max >= filterRange.min);
 }
 
 function displayJobs(jobs) {
@@ -612,43 +692,37 @@ function displayJobs(jobs) {
             posted: formatDate(job.createdAt || job.postedDate || job.datePosted),
             skills: job.skills || job.tags || [],
             description: job.description || '',
-            applicants: job.applicants || job.applicationCount || 0,
-            views: job.views || 0,
             contactEmail: job.contactEmail || '',
-            remote: job.remote || false,
-            featured: job.featured || false
+            remote: job.remote || false
         };
 
-        const skillsHTML = jobData.skills.slice(0, 5).map(skill => 
+        const skillsHTML = jobData.skills.slice(0, 4).map(skill => 
             `<span class="tag">${skill}</span>`
         ).join('');
 
         return `
             <div class="job-card" data-job-id="${jobData.id}">
-                <button class="bookmark-btn" onclick="toggleBookmark('${jobData.id}')">
-                    <i class="far fa-heart"></i>
-                </button>
-                
                 <div class="job-header">
                     <div class="job-info">
                         <h3>${jobData.title}</h3>
                         <div class="company-info">
                             <div class="company-logo">${jobData.company.charAt(0).toUpperCase()}</div>
-                            <span>${jobData.company}</span>
+                            <div class="company-details">
+                                <span class="company-name">${jobData.company}</span>
+                                <span class="job-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${jobData.location}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="salary">${jobData.salary}</div>
+                    <div class="salary-info">
+                        <span class="salary">${jobData.salary}</span>
+                        <span class="job-type">${jobData.type}</span>
+                    </div>
                 </div>
 
                 <div class="job-meta">
-                    <span class="meta-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        ${jobData.location}
-                    </span>
-                    <span class="meta-item">
-                        <i class="fas fa-clock"></i>
-                        ${jobData.type}
-                    </span>
                     <span class="meta-item">
                         <i class="fas fa-user-graduate"></i>
                         ${jobData.experience}
@@ -657,23 +731,24 @@ function displayJobs(jobs) {
                         <i class="fas fa-calendar"></i>
                         ${jobData.posted}
                     </span>
+                    ${jobData.remote ? '<span class="remote-badge">Remote</span>' : ''}
                 </div>
 
                 <div class="job-tags">
                     ${skillsHTML}
                 </div>
 
-                <div class="job-actions">
-                    <button class="btn-apply" onclick="applyToJob('${jobData.id}')">
-                        Apply now
-                    </button>
-                    <button class="btn-save" onclick="viewDetails('${jobData.id}')">
-                        View details
-                    </button>
-                    <span class="meta-item" style="margin-left: auto;">
-                        <i class="fas fa-users"></i>
-                        ${jobData.applicants} applicants
-                    </span>
+                <div class="job-footer">
+                    <div class="job-actions">
+                        <button class="btn-save" onclick="viewDetails('${jobData.id}')">
+                            <i class="fas fa-eye"></i>
+                            View Details
+                        </button>
+                        <button class="btn-apply" onclick="applyToJob('${jobData.id}')">
+                            <i class="fas fa-paper-plane"></i>
+                            Apply Now
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -689,10 +764,10 @@ function updateJobCount(count) {
         jobCountEl.textContent = count;
     }
     
-    // Also update the "Loading jobs with filters" message
-    const loadingMessage = document.querySelector('.jobs-section h2');
-    if (loadingMessage && loadingMessage.textContent.includes('Loading jobs with filters')) {
-        loadingMessage.textContent = `Showing ${count} jobs`;
+    // Update results header
+    const resultsCount = document.querySelector('.results-count');
+    if (resultsCount) {
+        resultsCount.innerHTML = `Showing <strong>${count}</strong> jobs`;
     }
 }
 
@@ -707,7 +782,6 @@ function showLoading() {
         `;
     }
     
-    // Update header
     updateJobCount('...');
 }
 
@@ -726,7 +800,7 @@ function showNoResults() {
                 <i class="fas fa-search"></i>
                 <h3>No jobs found</h3>
                 <p>Try adjusting your search criteria or filters</p>
-                <button onclick="clearFilters()" class="btn-apply" style="margin-top: 15px;">Clear Filters</button>
+                <button onclick="clearFilters()" class="btn-apply" style="margin-top: 15px;">Clear All Filters</button>
             </div>
         `;
     }
@@ -744,9 +818,6 @@ function showError(message) {
                 <div style="margin-top: 20px;">
                     <button onclick="loadJobs()" class="btn-apply">Try Again</button>
                     <button onclick="testAPI()" class="btn-secondary" style="margin-left: 10px;">Test API</button>
-                </div>
-                <div style="margin-top: 15px; font-size: 12px; color: #666;">
-                    Check browser console (F12) for more details
                 </div>
             </div>
         `;
@@ -782,33 +853,13 @@ async function testAPI() {
     }
 }
 
-async function handleSearch(e) {
-    e.preventDefault();
-    
-    const searchData = {
-        search: document.getElementById('jobTitle')?.value || '',
-        location: document.getElementById('location')?.value || '',
-        experience: document.getElementById('experience')?.value || ''
-    };
-
-    const filters = Object.fromEntries(
-        Object.entries(searchData).filter(([_, value]) => value)
-    );
-
-    console.log('Search filters:', filters);
-    currentPage = 1;
-    await loadJobs(filters);
-}
-
 async function handleSort(e) {
     const sortBy = e.target.value;
     
-    // Sort current jobs array
     let sortedJobs = [...currentJobs];
     
     switch (sortBy) {
         case 'relevant':
-            // Keep original order (most relevant first)
             break;
         case 'newest':
             sortedJobs.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
@@ -833,13 +884,9 @@ async function handleSort(e) {
     displayJobs(currentJobs);
 }
 
-async function applyFilters() {
-    console.log('Applying filters...');
-    applyCurrentFilters();
-}
-
+// Enhanced clear filters function
 function clearFilters() {
-    console.log('Clearing filters...');
+    console.log('Clearing all filters...');
     
     // Uncheck all filter checkboxes
     const filterInputs = document.querySelectorAll('input[type="checkbox"]');
@@ -856,47 +903,20 @@ function clearFilters() {
     if (location) location.value = '';
     if (experience) experience.value = '';
 
-    // Reset to show all jobs
+    // Reset to show all jobs immediately
     currentPage = 1;
-    currentJobs = [...allJobs];
-    displayJobs(currentJobs);
-    updateJobCount(currentJobs.length);
-}
-
-// Bookmark functionality (using in-memory storage)
-let bookmarkedJobs = new Set();
-
-function toggleBookmark(jobId) {
-    const bookmarkBtn = document.querySelector(`[data-job-id="${jobId}"] .bookmark-btn`);
-    if (!bookmarkBtn) return;
+    applySearchAndFilters();
     
-    const icon = bookmarkBtn.querySelector('i');
-    
-    if (bookmarkedJobs.has(jobId)) {
-        bookmarkedJobs.delete(jobId);
-        icon.classList.remove('fas');
-        icon.classList.add('far');
-        bookmarkBtn.classList.remove('bookmarked');
-        console.log(`Unbookmarked job ${jobId}`);
-    } else {
-        bookmarkedJobs.add(jobId);
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-        bookmarkBtn.classList.add('bookmarked');
-        console.log(`Bookmarked job ${jobId}`);
-    }
+    console.log('All filters cleared');
 }
 
 async function applyToJob(jobId) {
     console.log(`Applying to job ${jobId}`);
     
-    if (!authToken) {
-        alert('Please login to apply for jobs');
-        return;
-    }
-
-    if (confirm('Are you sure you want to apply for this job?')) {
-        alert('Application submitted successfully! (Demo mode)');
+    // Simple demo functionality
+    if (confirm('Apply for this position?\n\nNote: This is a demo. In a real application, this would redirect to the application form.')) {
+        // Show success message
+        showNotification('Application submitted successfully!', 'success');
     }
 }
 
@@ -978,6 +998,158 @@ function closeJobModal() {
     }
 }
 
+// Show notification function
+function showNotification(message, type = 'success') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        ${message}
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Extract salary range (both min and max) from salary string
+function extractSalaryRange(salaryString) {
+    if (!salaryString) return { min: 0, max: 0 };
+    
+    const cleanString = salaryString.replace(/[₹$,\s]/g, '').toLowerCase();
+    
+    const rangeMatch = cleanString.match(/(\d+)k?[-–](\d+)k?/);
+    if (rangeMatch) {
+        const min = parseInt(rangeMatch[1]);
+        const max = parseInt(rangeMatch[2]);
+        return { min, max };
+    }
+    
+    const kMatch = cleanString.match(/(\d+)[k]/);
+    if (kMatch) {
+        const salary = parseInt(kMatch[1]);
+        return { min: salary, max: salary };
+    }
+    
+    const plainMatch = cleanString.match(/(\d+)/);
+    if (plainMatch) {
+        let salary = parseInt(plainMatch[1]);
+        if (salary >= 1000) {
+            salary = Math.floor(salary / 1000);
+        }
+        return { min: salary, max: salary };
+    }
+    
+    return { min: 0, max: 0 };
+}
+
+// Check if salary range overlaps with filter range
+function checkSalaryRange(salaryString, filterRange) {
+    const salaryRange = extractSalaryRange(salaryString);
+    
+    let filterMin, filterMax;
+    
+    switch (filterRange) {
+        case '0-3k':
+            filterMin = 0;
+            filterMax = 3;
+            break;
+        case '3k-6k':
+            filterMin = 3;
+            filterMax = 6;
+            break;
+        case '6k-10k':
+            filterMin = 6;
+            filterMax = 10;
+            break;
+        case '10k+':
+            filterMin = 10;
+            filterMax = 1000;
+            break;
+        default:
+            return true;
+    }
+    
+    return (salaryRange.max >= filterMin && filterMax >= salaryRange.min);
+}
+
+// Enhanced experience range extraction
+function extractExperienceRange(experienceText, jobTitle = '') {
+    const text = `${experienceText} ${jobTitle}`.toLowerCase();
+    
+    // Handle special cases first
+    if (text.includes('fresher') || text.includes('0 year') || text.includes('no experience') || 
+        text.includes('entry level') || text.includes('graduate')) {
+        return { min: 0, max: 1 };
+    }
+    
+    if (text.includes('intern')) {
+        return { min: 0, max: 0 };
+    }
+    
+    // Look for specific patterns
+    const patterns = [
+        // Range patterns like "3-5 years", "2 to 4 years"
+        /(\d+)\s*[-–to]+\s*(\d+)\s*years?/i,
+        // Plus patterns like "5+ years", "3+ yrs"
+        /(\d+)\+\s*(?:years?|yrs?)/i,
+        // Single number patterns like "3 years", "5 yrs"
+        /(\d+)\s*(?:years?|yrs?)/i,
+        // Minimum patterns like "minimum 2 years"
+        /minimum\s+(\d+)/i,
+        // At least patterns like "at least 3 years"
+        /at\s+least\s+(\d+)/i
+    ];
+    
+    for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match) {
+            if (match[2]) {
+                // Range found (e.g., "3-5 years")
+                return { 
+                    min: parseInt(match[1]), 
+                    max: parseInt(match[2]) 
+                };
+            } else if (text.includes('+') || text.includes('minimum') || text.includes('at least')) {
+                // Plus or minimum pattern (e.g., "5+ years", "minimum 3 years")
+                const minExp = parseInt(match[1]);
+                return { 
+                    min: minExp, 
+                    max: Math.min(minExp + 5, 15) // Cap at reasonable max
+                };
+            } else {
+                // Single number (e.g., "3 years") - assume +/- 1 year flexibility
+                const exp = parseInt(match[1]);
+                return { 
+                    min: Math.max(0, exp - 1), 
+                    max: exp + 1 
+                };
+            }
+        }
+    }
+    
+    // Check for seniority levels in title/description
+    if (text.includes('senior') && !text.match(/\d+/)) {
+        return { min: 5, max: 15 };
+    }
+    
+    if (text.includes('junior') && !text.match(/\d+/)) {
+        return { min: 1, max: 3 };
+    }
+    
+    if (text.includes('lead') || text.includes('manager') || text.includes('head')) {
+        return { min: 7, max: 20 };
+    }
+    
+    // Default case - no specific experience mentioned
+    return { min: 0, max: 15 };
+}
+
 // Utility functions
 function formatDate(dateString) {
     if (!dateString) return 'Recently posted';
@@ -991,6 +1163,8 @@ function formatDate(dateString) {
         if (diffDays === 1) return 'Today';
         if (diffDays === 2) return 'Yesterday';
         if (diffDays <= 7) return `${diffDays} days ago`;
+        if (diffDays <= 30) return `${Math.ceil(diffDays/7)} weeks ago`;
+        if (diffDays <= 365) return `${Math.ceil(diffDays/30)} months ago`;
         
         return date.toLocaleDateString();
     } catch (error) {
@@ -998,8 +1172,48 @@ function formatDate(dateString) {
     }
 }
 
-// Debug functions
-console.log('Scripts.js loaded successfully');
+// Keyboard event handlers
+document.addEventListener('keydown', function(e) {
+    // Close modal on Escape key
+    if (e.key === 'Escape') {
+        closeJobModal();
+    }
+    
+    // Trigger search on Enter key in search inputs
+    if (e.key === 'Enter') {
+        const activeElement = document.activeElement;
+        if (activeElement && (
+            activeElement.id === 'jobTitle' || 
+            activeElement.id === 'location' || 
+            activeElement.id === 'experience'
+        )) {
+            e.preventDefault();
+            handleSearchSubmit();
+        }
+    }
+});
+
+// Debug function to test filter functionality
+function debugFilters() {
+    console.log('=== FILTER DEBUG ===');
+    console.log('Active filters:', getActiveFilters());
+    console.log('Search filters:', getSearchFilters());
+    console.log('Current jobs count:', currentJobs.length);
+    console.log('All jobs count:', allJobs.length);
+    
+    // Test if event listeners are attached
+    const testInputs = document.querySelectorAll('input[name="salary"], input[name="jobType"], input[name="workMode"]');
+    console.log('Inputs with event listeners:', 
+        Array.from(testInputs).map(input => ({
+            name: input.name,
+            value: input.value,
+            hasListener: !!input.onchange || input.addEventListener.toString().includes('native')
+        }))
+    );
+}
+
+// Debug functions and window exports
+console.log('Enhanced Scripts.js loaded successfully with REAL-TIME filtering');
 
 window.jobPortalDebug = {
     loadJobs,
@@ -1007,14 +1221,17 @@ window.jobPortalDebug = {
     currentJobs: () => currentJobs,
     allJobs: () => allJobs,
     clearFilters,
-    applyFilters,
-    applyCurrentFilters,
+    applySearchAndFilters,
     getActiveFilters,
-    updateFilterCounts,
-    bookmarkedJobs: () => Array.from(bookmarkedJobs),
+    getSearchFilters,
+    updateAllFilterCounts,
     extractSalaryRange,
     checkSalaryRange,
     extractExperienceRange,
     checkExperienceOverlap,
-    passesAllFilters
+    matchesExperienceRange,
+    passesAllFilters,
+    handleSearchSubmit,
+    debugFilters,
+    setupFilterListeners
 };

@@ -1,10 +1,9 @@
-// setup.js - Project setup script
+// setup.js
 const fs = require('fs');
 const path = require('path');
 
 console.log('Setting up CodeBot Job Portal...\n');
 
-// Create directory structure
 const directories = [
     'backend',
     'backend/models',
@@ -31,7 +30,6 @@ directories.forEach(dir => {
     }
 });
 
-// Create .env file
 const envContent = `# Environment Configuration
 NODE_ENV=development
 PORT=5000
