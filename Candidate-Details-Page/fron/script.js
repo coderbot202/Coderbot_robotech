@@ -1,28 +1,3 @@
-/*document.getElementById("candidateForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
-
-  const formData = new FormData(this);
-
-  try {
-    const res = await fetch("http://localhost:5000/api/candidates", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      alert("✅ Candidate submitted successfully!");
-      this.reset();
-    } else {
-      alert("❌ Error: " + data.error);
-    }
-  } catch (err) {
-    alert("⚠️ Failed to connect to server.");
-    console.error(err);
-  }
-});
-*/
-// ================== Candidate Form Submit ==================
 document.getElementById("candidateForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -39,7 +14,7 @@ document.getElementById("candidateForm").addEventListener("submit", async functi
 
     const data = await res.json();
     if (res.ok) {
-      alert("✅ Candidate submitted successfully!");
+      alert("✅ Applied successfully!");
       this.reset();
 
       // Clear selected skills

@@ -913,11 +913,8 @@ function clearFilters() {
 async function applyToJob(jobId) {
     console.log(`Applying to job ${jobId}`);
     
-    // Simple demo functionality
-    if (confirm('Apply for this position?\n\nNote: This is a demo. In a real application, this would redirect to the application form.')) {
-        // Show success message
-        showNotification('Application submitted successfully!', 'success');
-    }
+        // Redirect user to candidate.html with jobId as query param
+        window.location.href = `../Candidate-Details-Page/fron/Candidate.html?jobId=${jobId}`;
 }
 
 async function viewDetails(jobId) {
