@@ -1,0 +1,34 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+form label {
+  font-weight: 500;
+}
+
+form {
+  border: 1px solid #eee;
+}
+
+.btn-success {
+  background-color: #004d40;
+}
+
+img{
+        width: 100%;
+        height: 40px;
+    }
+
+.skill-chip {
+  background: #004d40;
+  border: 1px solid #000;
+  color: #fff;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin: 3px;
+  display: inline-flex;
+  align-items: center;
+}
+.skill-chip button {
+  margin-left: 8px;
+}
