@@ -1,0 +1,23 @@
+[
+  {
+    "title": "UI/UX Designer",
+    "location": "Remote",
+    "category": "UI / UX Design",
+    "image": "https://cdn-icons-png.flaticon.com/128/17163/17163509.png",
+    "availableJobs": 120
+  },
+  {
+    "title": "Web Developer",
+    "location": "New York",
+    "category": "Web Development",
+    "image": "https://cdn-icons-png.flaticon.com/128/4131/4131518.png",
+    "availableJobs": 100
+  },
+  {
+    "title": "Marketing Manager",
+    "location": "Los Angeles",
+    "category": "Marketing & Communication",
+    "image": "https://cdn-icons-png.flaticon.com/128/12446/12446956.png",
+    "availableJobs": 58
+  }
+]
