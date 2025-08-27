@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CoderBot Career Page</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+ <header class="header">
+        <div class="nav-container">
+            <div class="log">
+                <img class="log dark img-fluid" src="../assets/images/logo-dark.png" alt="coderbot" style="width: 100%; height: 40px;">
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/jobs">Active Hiring</a></li>
+                    <li><a href="/remote">Remote Jobs</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-outline">Login</a>
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+  <!-- ===== Hero Section ===== -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Find the job of your <span class="highlight">Dreams</span></h1>
+      <p class="subtext">
+        You have the skills. We'll help you find the right company.<br/>
+        Explore thousands of job openings tailored to your talent.
+      </p>
+      <p class="trending">
+        Trending Jobs:
+        <a href="#">UI/UX Designer</a>,
+        <a href="#">Developer</a>,
+        <a href="#">Content Writer</a>
+      </p>
+
+      <div class="search-bar">
+        <input type="text" placeholder="Job title or keyword" />
+        <input type="text" placeholder="Location" />
+        <button class="search-btn">Search</button>
+      </div>
+    </div>
+  <div class="hero-image">
+    <img src="image.png" alt="Girl with laptop">
+  </div>
+</section>
+
+  </section>
+<!-- ===== Trusted Companies Section ===== -->
+<!-- ===== Trusted Companies Section ===== -->
+<section class="trusted-companies">
+  <p>Trusted by top companies</p>
+  <div class="companies-logos">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+    <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Logo_IBM.svg" alt="IBM"> -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix">
+  </div>
+</section>
+  <section class="categories-section">
+    <p class="section-subtitle">Choose Categories</p>
+    <h2 class="section-title">Choose Categories</h2>
+
+    <div class="category-grid">
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/12446/12446956.png" alt="Marketing Icon">
+        <h3>Marketing & Communication</h3>
+        <p>58 Jobs Available</p>
+      </div>
+      <div class="category-box active">
+        <img src="https://cdn-icons-png.flaticon.com/128/17163/17163509.png" alt="UI/UX Icon">
+        <h3>UI / UX Design</h3>
+        <p>120 Jobs Available</p>
+      </div>
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/3820/3820195.png" alt="Finance Icon">
+        <h3>Finance Management</h3>
+        <p>230 Jobs Available</p>
+      </div>
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/4131/4131518.png" alt="Web Dev Icon">
+        <h3>Web Development</h3>
+        <p>100 Jobs Available</p>
+      </div>
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/6208/6208634.png" alt="Project Icon">
+        <h3>Project Management</h3>
+        <p>87 Jobs Available</p>
+      </div>
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/9139/9139531.png" alt="Consulting Icon">
+        <h3>Business & Consulting</h3>
+        <p>23 Jobs Available</p>
+      </div>
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/17109/17109597.png" alt="Graphic Icon">
+        <h3>Graphic Designer</h3>
+        <p>65 Jobs Available</p>
+      </div>
+      <div class="category-box">
+        <img src="https://cdn-icons-png.flaticon.com/128/8350/8350470.png" alt="Video Icon">
+        <h3>Video Editor</h3>
+        <p>120 Jobs Available</p>
+      </div>
+    </div>
+  </section>
+
+<h2>Upcoming Hiring</h2>
+<div class="categories">
+  <span class="active">All</span>
+  <span>Sales and Marketing</span>
+  <span>Banking Finance</span>
+  <span>Personal Development</span>
+  <span>IT- Information Technology</span>
+  <span>HR - Human Resource</span>
+  <span>Management</span>
+</div>
+
+<div class="slider-container">
+  <div class="slider-track">
+    <div class="card" onclick="redirectJob('frontend-developer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/226/226777.png" alt="">
+      <h3>Frontend Developer</h3>
+      <p>Duration: 51 Hours | Mode: Online</p>
+      <p>Work on responsive UI. Collaborate with backend team.</p>
+    </div>
+    <div class="card" onclick="redirectJob('fullstack-developer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/1822/1822899.png" alt="">
+      <h3>Full Stack Developer</h3>
+      <p>Duration: 20 Hours | Mode: Online</p>
+      <p>Handle both client & server side. Build scalable apps.</p>
+    </div>
+    <div class="card" onclick="redirectJob('backend-developer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="">
+      <h3>Backend Developer in Node.js</h3>
+      <p>Duration: 41 Hours | Mode: Online</p>
+      <p>Develop APIs & database structure. Ensure performance.</p>
+    </div>
+    <div class="card" onclick="redirectJob('data-analyst')">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919826.png" alt="">
+      <h3>Data Analyst</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Analyze datasets. Create insights & reports.</p>
+    </div>
+    <div class="card" onclick="redirectJob('ui-ux-designer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919827.png" alt="">
+      <h3>UI/UX Designer</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Design user-friendly interfaces. Enhance user experience.</p>
+    </div>
+  </div>
+</div>
+
+<h2>Active Hiring</h2>
+
+<div class="categories">
+  <span class="active">All</span>
+  <span>Sales and Marketing</span>
+  <span>Banking Finance</span>
+  <span>Personal Development</span>
+  <span>IT- Information Technology</span>
+  <span>HR - Human Resource</span>
+  <span>Management</span>
+</div>
+
+<div class="carousel-container">
+  <div class="carousel-track">
+    <div class="card" onclick="redirectJob('frontend-developer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/226/226777.png" alt="">
+      <h3>Frontend Developer</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Work on responsive UI. Collaborate with backend team.</p>
+    </div>
+    <div class="card" onclick="redirectJob('fullstack-developer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/1822/1822899.png" alt="">
+      <h3>Full Stack Developer</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Handle client & server side. Build scalable apps.</p>
+    </div>
+    <div class="card" onclick="redirectJob('backend-developer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="">
+      <h3>Backend Developer in Node.js</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Develop APIs & database structure. Ensure performance.</p>
+    </div>
+    <div class="card" onclick="redirectJob('data-analyst')">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919826.png" alt="">
+      <h3>Data Analyst</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Analyze datasets. Create insights & reports.</p>
+    </div>
+    <div class="card" onclick="redirectJob('ui-ux-designer')">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919827.png" alt="">
+      <h3>UI/UX Designer</h3>
+      <p>Duration: 30 Hours | Mode: Online</p>
+      <p>Design user-friendly interfaces. Enhance user experience.</p>
+    </div>
+  </div>
+</div>
+
+<div class="view-all">View All</div>
+
+ 
+<!-- CoderBOT Logo Section -->
+<div class="logo">
+                <img class="logo dark img-fluid" src="../assets/images/logo-dark.png" alt="coderbot">
+            </div>
+
+
+
+<div class="apply-now-container">
+  <button class="apply-now-btn">Apply Now</button>
+</div>
+
+<section class="remote-jobs-slider">
+
+  <h2>Remote Jobs</h2>
+  <div class="categories">
+    <span class="active">All</span>
+    <span>Sales and Marketing</span>
+    <span>Banking Finance</span>
+    <span>Personal Development</span>
+    <span>IT- Information Technology</span>
+    <span>HR - Human Resource</span>
+    <span>Management</span>
+  </div>
+
+  <div class="slider-container">
+    <div class="slider-track">
+      <div class="card" onclick="redirectJob('loan-officer')">
+        <img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="">
+        <h3>Loan Officer</h3>
+        <p>Work with clients to process loans. Handle documentation.</p>
+        <p class="job-meta">Duration: 40 Hours | Mode: Online</p>
+      </div>
+      <div class="card" onclick="redirectJob('business-development')">
+        <img src="https://cdn-icons-png.flaticon.com/512/1822/1822899.png" alt="">
+        <h3>Business Development</h3>
+        <p>Identify new business opportunities. Build client relations.</p>
+        <p class="job-meta">Duration: 25 Hours | Mode: Online</p>
+      </div>
+      <div class="card" onclick="redirectJob('recruiter')">
+        <img src="https://cdn-icons-png.flaticon.com/512/226/226777.png" alt="">
+        <h3>Recruiter</h3>
+        <p>Manage recruitment process. Screen and interview candidates.</p>
+        <p class="job-meta">Duration: 35 Hours | Mode: Online</p>
+      </div>
+      <div class="card" onclick="redirectJob('hr-assistant')">
+        <img src="https://cdn-icons-png.flaticon.com/512/919/919826.png" alt="">
+        <h3>HR Assistant</h3>
+        <p>Assist HR in payroll and employee management tasks.</p>
+        <p class="job-meta">Duration: 30 Hours | Mode: Online</p>
+      </div>
+      <div class="card" onclick="redirectJob('ui-ux-designer')">
+        <img src="https://cdn-icons-png.flaticon.com/512/919/919827.png" alt="">
+        <h3>UI/UX Designer</h3>
+        <p>Design user interfaces and improve user experience.</p>
+        <p class="job-meta">Duration: 45 Hours | Mode: Online</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="view-all">View All</div>
+</section>
+
+
+
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <div class="newsletter-text">
+      <h2 class="hii">Join our newsletter</h2>
+      <p>Stay updated with our latest templates and offers. Join our newsletter today!</p>
+    </div>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Enter your email address here..." required />
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Logo & About -->
+    <div class="footer-section">
+      <div class="lo">
+                <img class="lo dark img-fluid" src="../assets/images/logo-dark.png" alt="coderbot" style="width: 50%; height: 50px;">
+            </div>
+      <p class="footer-about">
+        Utilize our tools to develop your concepts and bring your vision to life. Once complete, effortlessly share your creations.
+      </p>
+    </div>
+
+    <!-- Company -->
+    <div class="footer-section">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">Leadership</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Terms & Conditions</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+
+    <!-- Our Fields -->
+    <div class="footer-section">
+      <h4>Our Fields</h4>
+      <ul>
+        <li><a href="#">HealthCare & AI</a></li>
+        <li><a href="#">Agriculture & Smart Farming</a></li>
+        <li><a href="#">Smart Homes & IoT</a></li>
+        <li><a href="#">Aerospace & Defense</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="footer-section">
+      <h4>Contact</h4>
+      <ul class="footer-contact">
+        <li><i class="fas fa-map-marker-alt"></i> c/o Uma Memorial Public School, Dherathi Lakhanpur, Cholapur Varanasi</li>
+        <li><i class="fas fa-envelope"></i> <a href="mailto:info@coderbotrobotech.in">info@coderbotrobotech.in</a></li>
+        <li><i class="fas fa-phone-alt"></i> +91 8090587632</li>
+        <li><i class="fas fa-globe"></i> Coderbot Robotech</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<script src="script.js"></script>
+
+</body>
+</html>  
