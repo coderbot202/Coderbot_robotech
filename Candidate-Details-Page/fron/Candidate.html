@@ -9,21 +9,27 @@
 </head>
 <body class="bg-light">
 
-<!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#"><img src="https://coderbotrobotech.in/assets/images/logo-dark.png" alt="Coderbot" class="me-2"></a>
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item mx-2"><a class="nav-link" href="#">Home</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#">About</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#">Active Hiring</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#">Remote Jobs</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#">Contact Us</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="#">Login</a></li>
-        <li class="nav-item mx-2"><a class="btn btn-outline-primary" href="#">Sign Up</a></li>
-      </ul>
-    </div>
-  </nav>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img class="logo dark img-fluid" src="https://coderbotrobotech.in/assets/images/logo-dark.png" alt="coderbot" style="width: 100%; height: 40px;">
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/jobs">Active Hiring</a></li>
+                    <li><a href="/remote">Remote Jobs</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-outline">Login</a>
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
 
 
   <div class="container my-5">
@@ -35,35 +41,31 @@
       <!-- Job Title -->
       <div class="mb-3">
         <label class="form-label">Job Title</label>
-        <input type="text" class="form-control" name="jobTitle" placeholder="Add job title, role vacancies etc">
+        <input type="text" class="form-control" name="jobTitle" readonly>
       </div>
 
       <div class="row">
       <!-- Resume -->
       <div class="col-md-6 mb-3">
         <label class="form-label">Add CV/Resume</label>
-        <input type="file" class="form-control" name="resumeFile">
+        <input type="file" class="form-control" name="resumeFile" required>
       </div>
 
       <!-- Job Role -->
       <div class="col-md-6 mb-3">
         <label class="form-label">Job Role</label>
-        <select class="form-select" name="jobRole">
-          <option value="">Select...</option>
-          <option value="Developer">Developer</option>
-          <option value="Designer">Designer</option>
-        </select>
+        <input type="text" class="form-control" name="jobRole" readonly>
       </div>
       </div>
       <!-- Salary -->
       <div class="row">
         <div class="col-md-4 mb-3">
           <label class="form-label">Current Salary</label>
-          <input type="number" class="form-control" name="currentSalary" placeholder="Current Salary">
+          <input type="number" class="form-control" name="currentSalary" placeholder="Current Salary" required>
         </div>
         <div class="col-md-4 mb-3">
           <label class="form-label">Expected Salary</label>
-          <input type="number" class="form-control" name="expectedSalary" placeholder="Expected Salary">
+          <input type="number" class="form-control" name="expectedSalary" placeholder="Expected Salary" required>
         </div>
         <div class="col-md-4 mb-3">
           <label class="form-label">Currency</label>
@@ -107,17 +109,17 @@
         </div>
         <div class="col-md-6 mb-3">
           <label class="form-label">City</label>
-          <input type="text" class="form-control" name="city">
+          <input type="text" class="form-control" name="city" required>
         </div>
        </div>
       <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">Pincode</label>
-          <input type="text" class="form-control" name="pincode" placeholder="Enter your PinCode">
+          <input type="text" class="form-control" name="pincode" placeholder="Enter your PinCode" required>
         </div>
         <div class="col-md-6 mb-3">
           <label class="form-label">Country</label>
-          <input type="text" class="form-control" name="country">
+          <input type="text" class="form-control" name="country" required>
         </div>
       </div>
       
@@ -125,11 +127,11 @@
       <!-- Profile Summary -->
       <div class="mb-3">
         <label class="form-label">Profile Summary</label>
-        <textarea class="form-control" name="profileSummary" rows="4" placeholder="Add your description..."></textarea>
+        <textarea class="form-control" name="profileSummary" rows="4" placeholder="Add your description..." required></textarea>
       </div>
 
       <!-- Submit -->
-      <button type="submit" class="btn btn-success w-100">Submit</button>
+      <button type="submit" class="btn btn-primary w-10">Submit</button>
     </form>
   </div>
 
