@@ -1241,3 +1241,113 @@ h6 {
   opacity: 1;
   visibility: visible;
 }
+
+/* Up Coming Project Section CSS*/
+
+   .upcoming-projects-section .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+   }
+
+    .upcoming-projects-section h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .upcoming-projects-section .projects {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .upcoming-projects-section .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      flex: 1 1 300px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .upcoming-projects-section .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .upcoming-projects-section .card h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0 0 10px 0;
+      color: #1d3e53;
+    }
+
+    .upcoming-projects-section .card p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #444;
+    }
+
+    .upcoming-projects-section .icon {
+      font-size: 24px;
+      color: #1d3e53;
+      margin-right: 10px;
+    }
+
+    .upcoming-projects-section .card-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .upcoming-projects-section .projects {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .upcoming-projects-section .card {
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .upcoming-projects-section h2 {
+        font-size: 20px;
+      }
+
+      .upcoming-projects-section .card h3 {
+        font-size: 14px;
+      }
+
+      .upcoming-projects-section .card p {
+        font-size: 13px;
+      }
+
+      .upcoming-projects-section .icon {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .upcoming-projects-section h2 {
+        font-size: 18px;
+      }
+
+      .upcoming-projects-section .card h3 {
+        font-size: 13px;
+      }
+
+      .upcoming-projects-section .card p {
+        font-size: 12px;
+      }
+
+      .upcoming-projects-section .icon {
+        font-size: 18px;
+      }
+    }
