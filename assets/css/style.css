@@ -1351,3 +1351,10 @@ h6 {
         font-size: 18px;
       }
     }
+
+    .upcoming-projects-section .device-img {
+      width: 40px;       /* adjust size */
+      height: auto;
+      margin-right: 10px;
+      border-radius: 6px; /* optional: gives smooth corners */
+    }
