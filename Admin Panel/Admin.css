@@ -55,4 +55,152 @@ body {
   color: white;
 }
 
+#users .card {
+  border: 1px solid #444;
+}
 
+#users .table th {
+  background-color: #bbb;
+  color: #1f1f2e;
+}
+
+#users .table td {
+  color: #1f1f2e;
+}
+
+/* CMS Light Theme */
+#cms {
+  background-color: #f8f9fc;
+  min-height: 100vh;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#cms h3, #cms h6 {
+  color: #333;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  color: #111;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card h3 {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.chart-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.chart-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Small text styling */
+.text-success { color: #28a745 !important; }
+.text-danger { color: #dc3545 !important; }
+
+#websiteTraffic li span {
+  font-size: 14px;
+  color: #333;
+}
+
+#websiteTraffic .progress {
+  background-color: #eaeaea;
+  border-radius: 5px;
+}
+
+#websiteTraffic .progress-bar {
+  border-radius: 5px;
+}
+
+#taskList li {
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+#taskList .btn-outline-warning {
+  color: #ffc107;
+  border: none;
+  font-size: 18px;
+}
+
+#taskList .btn-outline-danger {
+  border: none;
+  color: #dc3545;
+  font-size: 16px;
+}
+
+#calendar {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.fc .fc-daygrid-event {
+  background: #215C5C;
+  border: none;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+#calendar {
+  width: 100%;
+  min-height: 500px;
+}
+
+
+
+#settings .btn {
+  background-color: #215C5C;
+  color: white;
+}
+
+#settings .card {
+  border-radius: 12px;
+}
+
+#settings .table td,
+#settings .table th {
+  vertical-align: middle;
+}
+
+#settings .badge {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+
+#settings .card {
+  border-radius: 12px;
+}
+
+#settings .table td,
+#settings .table th {
+  vertical-align: middle;
+}
+
+#settings .badge {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Coderbot Robotech</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./Admin.css">
 </head>
 <body>
@@ -75,9 +77,9 @@
       </div>
 
       <div class="m-4">
-        <button class="btn btn-dark me-5">New User</button>
-        <button class="btn btn-dark me-5">Manage User</button>
-        <button class="btn btn-dark">Real Time Analytics</button>
+        <button class="btn btn-dark me-5" id="gotousers">New User</button>
+        <button class="btn btn-dark me-5" id="gotoactivity">Manage User</button>
+        <button class="btn btn-dark" id="gotocms">Real Time Analytics</button>
       </div>
 
       <div class="settings m-4">
@@ -115,23 +117,70 @@
     </div>
     
 
-     <!-- CMS Page -->
-  <div id="cms" class="page d-none">
-    <h3>Contact Submissions</h3>
-    <table class="table table-bordered mt-4">
-      <thead class="table-dark">
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Message</th>
-        </tr>
-      </thead>
-      <tbody id="contactTable">
-        <tr><td>Alex</td><td>alex@mail.com</td><td>Hello!</td></tr>
-        <tr><td>Sara</td><td>sara@mail.com</td><td>Need help with dashboard</td></tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- CMS Page -->
+    <div id="cms" class="page d-none">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark">Overview</h3>
+        <select id="timeFilter" class="form-select w-auto">
+          <option value="today" selected>Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="year">This Year</option>
+        </select>
+      </div>
+
+
+      <!-- Top Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="stat-card">
+            <h6>Views</h6>
+            <h3 id="viewsCount">7,265</h3>
+            <small id="viewsChange" class="text-success">+11.01%</small>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <h6>Visits</h6>
+            <h3 id="visitsCount">3,671</h3>
+            <small id="visitsChange" class="text-danger">-0.03%</small>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <h6>New Users</h6>
+            <h3 id="newUsersCount">156</h3>
+            <small id="newUsersChange" class="text-success">+15.03%</small>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <h6>Active Users</h6>
+            <h3 id="activeUsersCount">2,318</h3>
+            <small id="activeUsersChange" class="text-success">+6.08%</small>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Charts -->
+      <div class="row g-3">
+        <div class="col-md-8">
+          <div class="chart-card">
+            <h6>Total Users</h6>
+            <canvas id="totalUsersChart"></canvas>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="chart-card">
+            <h6>Traffic by Website</h6>
+            <ul class="list-unstyled" id="websiteTraffic"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   <!-- Activity Page -->
   <div id="activity" class="page d-none">
@@ -203,11 +252,225 @@
   </table>
 </div>
 
+<!-- Users Page -->
+<div id="users" class="page d-none">
+  <h3 class="mb-4">Registered Users</h3>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#newUsers">New Users</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#oldUsers">Old Users</a>
+    </li>
+  </ul>
+
+  <!-- Filters -->
+  <div class="d-flex mb-3 gap-2">
+    <input type="text" id="searchUser" class="form-control w-50" placeholder="Search by name or username">
+    <select class="form-select w-auto">
+      <option>All Age Groups</option>
+      <option>18-25</option>
+      <option>26-40</option>
+      <option>41+</option>
+    </select>
+    <select class="form-select w-auto">
+      <option>All</option>
+      <option>Active</option>
+      <option>Inactive</option>
+    </select>
+  </div>
+
+  <!-- User Table -->
+  <div class="text-white p-3 rounded">
+    <table class="table table-light table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Phone No</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Country</th>
+          <th>PDF</th>
+        </tr>
+      </thead>
+      <tbody id="userTable">
+        <!-- Filled dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  <!-- Settings Page -->
+  <div id="settings" class="page d-none">
+    <h2 class="mb-4">Settings</h5>
+
+    <!-- Buttons instead of tabs -->
+    <div class="mt-3 mb-4">
+      <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#calendarModal">
+        Open Calendar
+      </button>
+      <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#todoModal">
+        Open To-Do
+      </button>
+    </div>
+
+  <!-- Calendar Modal -->
+  <div class="modal fade" id="calendarModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title">Calendar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- To-Do Modal -->
+  <div class="modal fade" id="todoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New To-Do</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="text" id="newTaskInput" class="form-control me-3" placeholder="Write Your task name here">
+            <button class="btn btn-primary" id="addTaskBtn">Save</button>
+          </div>
+
+          <ul class="list-group" id="taskList">
+            <!-- Sample tasks -->
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <input type="checkbox" class="form-check-input me-2">
+                Meeting with CEO
+              </div>
+              <div>
+                <button class="btn btn-sm btn-outline-warning me-2">★</button>
+                <button class="btn btn-sm btn-outline-danger">✖</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects Section -->
+<div class="card shadow-sm border-0 mt-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="card-title mb-3">Projects</h6>
+       <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#projectModal">
+      Add Project
+    </button>
+    </div>
+      <div class="table-responsive">
+        <table class="table align-middle" id="projectsTable">
+          <thead class="table-light">
+            <tr>
+              <th>Manager</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dynamic projects will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>
+
+<!-- Add Project Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="projectForm">
+          <div class="mb-3">
+            <label class="form-label">Manager</label>
+            <input type="text" class="form-control" id="projectManager" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" id="projectDate" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Amount</label>
+            <input type="number" class="form-control" id="projectAmount" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="projectStatus">
+              <option value="In Progress" class="text-primary">In Progress</option>
+              <option value="Complete" class="text-success">Complete</option>
+              <option value="Pending" class="text-info">Pending</option>
+              <option value="Approved" class="text-warning">Approved</option>
+              <option value="Rejected" class="text-secondary">Rejected</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Save Project</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Update Project Modal -->
+<div class="modal fade" id="updateProjectModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Project Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="updateProjectForm">
+          <input type="hidden" id="updateProjectIndex">
+
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="updateProjectStatus">
+              <option value="In Progress" class="text-primary">In Progress</option>
+              <option value="Complete" class="text-success">Complete</option>
+              <option value="Pending" class="text-info">Pending</option>
+              <option value="Approved" class="text-warning">Approved</option>
+              <option value="Rejected" class="text-secondary">Rejected</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Update Status</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
 </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script src="Admin.js"></script>
 </body>
 </html>
