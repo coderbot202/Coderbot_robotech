@@ -1,0 +1,99 @@
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+.auth-body {
+  height: 100vh;
+  background: #215C5C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* White card */
+.auth-card {
+  background: #fff;
+  width: 360px;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.auth-card h2 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+
+.subtext {
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Form fields */
+form label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+form input[type="email"],
+form input[type="text"],
+form input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.password-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.forgot {
+  font-size: 0.8rem;
+  color: #3a7bd5;
+  text-decoration: none;
+}
+
+/* Checkbox */
+.checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 1.3rem;
+}
+.checkbox input {
+  margin-right: 0.5rem;
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  background: #215C5C;
+  color: #fff;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.btn:hover { background: #346fc2; }
+
+.switch {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.85rem;
+}
+.switch a { color: #3a7bd5; text-decoration: none; }
+.switch a:hover { text-decoration: underline; }
